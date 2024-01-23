@@ -1,13 +1,20 @@
 document.addEventListener('DOMContentLoaded', function () {
     var canvas = document.getElementById('canvas')
     const pipewidth = canvas.clientWidth / 6
-    const spacing = 20
+    var spacing = 20
     var pipes = []
     var Ids = []
+    var fallID;
+    var pipeID;
+    var createpipeID;
+    var collisionID;
+    var jumpID;
+    var score = 0
+    var jumpheight = 40
     var startButton = document.getElementById('startbtn')
     startButton.style.top = `${(canvas.clientHeight / 2) - (startButton.clientHeight / 2) + 70}px`
     startButton.style.left = `${(canvas.clientWidth / 2) - (startButton.clientWidth / 2)}px`
-
+    var scoreText = document.getElementById('score')
 
 
 
@@ -30,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         lowerPipe.style.height = `${lowerHeight}%`
         lowerPipe.style.width = `${pipewidth}px`
-        lowerPipe.style.bottom = `${-20}%`
+        lowerPipe.style.top = `${random + spacing}%`
         lowerPipe.style.left = `${left}px`
         lowerPipe.classList.add('pipe')
 
@@ -48,6 +55,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function movePipes(item) {
+        if (item[0] < canvas.clientWidth / 2 - 20) {
+            score++
+            scoreText.innerHTML = `Score: ${score}`
+        }
+
         if (item[0] <= 0) {
             //remove pipe
             removePipe(item[1], item[2])
@@ -67,8 +79,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function createBird() {
         var bird = document.createElement('div')
-        var tmp = canvas.clientHeight / 2 - 25
         bird.classList.add('bird')
+        var tmp = canvas.clientHeight / 2 - 25
         bird.style.left = `${canvas.clientWidth / 2 - 25}px`
         bird.style.top = `${tmp}px`
         canvas.appendChild(bird)
@@ -85,15 +97,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+
     function playerJump() {
-        for (i = 2; i < 22; i += 2) {
-            if (player[1] >= 50) {
-                player[1] -= i
-                player[0].style.top = player[1] + 'px'
-            }
+        if (player[1] >= 50 & jumpheight >= 0) {
+            jumpheight -= 1
+            player[1] -= 2
+            player[0].style.top = player[1] + 'px'
+        } else {
+            clearInterval(jumpID)
+            Ids.splice(Ids.indexOf(jumpID), 1)
+            fallID = setInterval(playerFall, 5)
+            Ids.push(fallID)
+            jumpheight = 40
+
         }
     }
-
 
     function checkCollision(pipeElement) {
         var playerRightEdge = canvas.clientWidth / 2 + 20
@@ -112,10 +130,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function initIntervals() {
-        var fallID = setInterval(playerFall, 5);
-        var pipeID = setInterval(updatePipes, 10)
-        var createpipeID = setInterval(createPipe, 2500)
-        var collisionID = setInterval(updateCollision, 1);
+        fallID = setInterval(playerFall, 5);
+        pipeID = setInterval(updatePipes, 10)
+        createpipeID = setInterval(createPipe, 2500)
+        collisionID = setInterval(updateCollision, 1);
         Ids.push(fallID)
         Ids.push(pipeID)
         Ids.push(createpipeID)
@@ -135,10 +153,9 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('keydown', function (e) {
         if (e.key === 'ArrowUp') {
             clearInterval(fallID)
-            playerJump()
-            if (fallID === null) {
-                var fallID = setInterval(playerFall, 5)
-            };
+            Ids.splice(Ids.indexOf(fallID), 1)
+            jumpID = this.setInterval(playerJump, 3)
+            Ids.push(jumpID)
         };
     });
 
