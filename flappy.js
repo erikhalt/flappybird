@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function playerFall() {
         if (player[1] < (canvas.clientHeight - 50)) {
 
-            player[1] += 1
+            player[1] += 1.5
             player[0].style.top = player[1] + 'px'
         }
     }
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.key === 'ArrowUp') {
             clearInterval(fallID)
             Ids.splice(Ids.indexOf(fallID), 1)
-            jumpID = this.setInterval(playerJump, 3)
+            jumpID = this.setInterval(playerJump, 2)
             Ids.push(jumpID)
         };
     });
