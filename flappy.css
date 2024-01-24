@@ -27,10 +27,8 @@ body {
 
 .pipe {
     display: block;
-    background-image: url('Pipe.png');
-    background-position: center;
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
+    background-image: radial-gradient(rgb(165, 201, 161), rgb(90, 196, 79));
+    border: 3px solid black;
     position: absolute;
 }
 
@@ -38,7 +36,7 @@ body {
     position: absolute;
     width: 40px;
     height: 30px;
-    background-image: url('Bird.png');
+    background-image: url('Bird2.png');
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;

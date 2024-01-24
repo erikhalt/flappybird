@@ -80,9 +80,10 @@ document.addEventListener('DOMContentLoaded', function () {
     function createBird() {
         var bird = document.createElement('div')
         bird.classList.add('bird')
-        var tmp = canvas.clientHeight / 2 - 25
+        var tmp = canvas.clientHeight / 2 - 15
         bird.style.left = `${canvas.clientWidth / 2 - 25}px`
         bird.style.top = `${tmp}px`
+        console.log(tmp)
         canvas.appendChild(bird)
         return [bird, tmp]
     }
@@ -115,8 +116,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function checkCollision(pipeElement) {
         var playerRightEdge = canvas.clientWidth / 2 + 20
-        var playerTopEdge = player[1]
-        var playerBottomEdge = player[1] - 45
+        var playerTopEdge = player[1] - 15
+        var playerBottomEdge = player[1] + 15
         if (pipeElement[0] < playerRightEdge & (pipeElement[0] + pipewidth) > playerRightEdge) {
             if (playerTopEdge <= pipeElement[1].clientHeight | playerBottomEdge >= canvas.clientHeight - pipeElement[2].clientHeight) {
                 gameOver()
@@ -180,4 +181,6 @@ document.addEventListener('DOMContentLoaded', function () {
         pipes = []
         startButton.style.display = 'flex'
     }
+    // startButton.style.display = 'none'
+    // initIntervals()
 });
