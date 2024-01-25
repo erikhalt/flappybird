@@ -55,9 +55,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function movePipes(item) {
-        if (item[0] < canvas.clientWidth / 2 - 20) {
+        if (item[0] === Math.floor(canvas.clientWidth / 2 - 20)) {
             score++
-            scoreText.innerHTML = `Score: ${score}`
+            updateScore()
         }
 
         if (item[0] <= 0) {
@@ -107,8 +107,10 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             clearInterval(jumpID)
             Ids.splice(Ids.indexOf(jumpID), 1)
+
             fallID = setInterval(playerFall, 5)
             Ids.push(fallID)
+
             jumpheight = 40
 
         }
@@ -142,11 +144,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
+    function updateScore() {
+        scoreText.innerHTML = `Score: ${score}`
+    }
 
-    var player = createBird();
+
+    var player;
 
     startButton.addEventListener('click', function () {
         startButton.style.display = 'none'
+        score = 0
+        updateScore()
+        player = createBird()
         initIntervals()
 
     })
@@ -155,32 +164,56 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.key === 'ArrowUp') {
             clearInterval(fallID)
             Ids.splice(Ids.indexOf(fallID), 1)
-            jumpID = this.setInterval(playerJump, 2)
-            Ids.push(jumpID)
+            try {
+                this.clearInterval(jumpID)
+                jumpheight = 40
+                jumpID = this.setInterval(playerJump, 2)
+                Ids.push(jumpID)
+            } catch {
+                jumpID = this.setInterval(playerJump, 2)
+                Ids.push(jumpID)
+            }
+
         };
     });
 
-    function gameOver() {
-        console.log('GAME OVER!')
+    function removeIntervals() {
         Ids.forEach((item) => {
             clearInterval(item)
         })
         Ids = []
+    }
 
+    function removeAllPipes() {
         pipes.forEach((element) => {
+            try {
+                var upper = element[1]
+                var lower = element[2]
+                var upperParent = upper.parentNode
+                upperParent.removeChild(upper)
+                var lowerParent = lower.parentNode
+                lowerParent.removeChild(lower)
+            } catch {
 
-
-            var upper = element[1]
-            var lower = element[2]
-            var upperParent = upper.parentNode
-            upperParent.removeChild(upper)
-            var lowerParent = lower.parentNode
-            lowerParent.removeChild(lower)
+            }
 
         })
         pipes = []
+    }
+    function removePlayer() {
+        var playerParent = player[0].parentNode
+        playerParent.removeChild(player[0])
+        player = [0, 0]
+    }
+
+    function gameOver() {
+        console.log('GAME OVER!')
+        console.log(Ids)
+        removeIntervals()
+        removeAllPipes()
+        removePlayer()
+
         startButton.style.display = 'flex'
     }
-    // startButton.style.display = 'none'
-    // initIntervals()
+
 });
